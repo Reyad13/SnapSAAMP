@@ -3,9 +3,15 @@ const odbc = require('odbc');
 const multer = require('multer');
 const FormData = require('form-data');
 const axios = require('axios');
+const fetch = require('node-fetch'); // Si besoin de node-fetch pour effectuer les appels HTTP
 const app = express();
 
 app.use(express.json());
+
+// Route de test pour vérifier que le serveur répond
+app.get('/', (req, res) => {
+  res.send('Hello, world! Server is up.');
+});
 
 // Configuration de multer pour stocker le fichier en mémoire
 const upload = multer({ storage: multer.memoryStorage() });
@@ -83,7 +89,6 @@ const getAuthToken = async () => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(authData)
-    // Optionnel: désactiver la vérification SSL en dev (non recommandé en prod)
   });
   const data = await response.json();
   if (data.data && data.data.authToken) {
@@ -184,7 +189,7 @@ const uploadFileToGed = async (fileBuffer, originalName, fileType, authToken, pa
       "Auth-Token": authToken,
     };
 
-    const url = "https://ged.maileva.com/api/document"; // Essayez avec ou sans slash final
+    const url = "https://ged.maileva.com/api/document";
 
     console.log("Axios headers:", headers);
     console.log("Chemin envoyé:", pathString);
@@ -228,7 +233,7 @@ app.post('/upload-to-ged', upload.single('file'), async (req, res) => {
     const uploadResult = await uploadFileToGed(
       req.file.buffer,
       originalName,
-      req.file.mimetype, // utilisation du mimetype réel
+      req.file.mimetype,
       authToken,
       pathString
     );
@@ -245,4 +250,3 @@ app.post('/upload-to-ged', upload.single('file'), async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => console.log(`Server listening on port ${PORT}`));
-
