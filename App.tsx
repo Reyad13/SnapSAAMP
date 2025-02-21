@@ -25,7 +25,7 @@ import * as FileSystem from "expo-file-system";
 import ViewShot from "react-native-view-shot"; // Pour capturer une vue
 
 // URL de votre backend (à adapter)
-const API_BASE_URL = "http://10.13.1.105:3000";
+const API_BASE_URL = "http://10.13.1.39:3000";
 
 export default function App() {
   // Gestion d'Expo Camera
