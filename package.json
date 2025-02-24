@@ -17,7 +17,8 @@
     "react-native-signature-canvas": "^4.7.2",
     "react-native-view-shot": "~4.0.3",
     "react-native-web": "~0.19.6",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "expo-build-properties": "~0.13.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
