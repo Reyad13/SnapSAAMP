@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "with-camera",
-    "slug": "with-camera",
+    "name": "SnapSAAMP",
+    "slug": "SnapSAAMP",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,7 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.example.with-camera",
+      "bundleIdentifier": "com.example.SnapSAAMP",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.example.withcamera"
+      "package": "com.example.SnapSAAMP"
     },
     "web": {
       "favicon": "./assets/favicon.png"
