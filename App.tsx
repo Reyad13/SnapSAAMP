@@ -23,6 +23,11 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import SignatureScreen from "react-native-signature-canvas";
 import * as FileSystem from "expo-file-system";
 import ViewShot from "react-native-view-shot"; // Pour capturer une vue
+import fetch from 'cross-fetch';
+import React from 'react';
+
+
+
 
 // URL de votre backend (à adapter)
 const API_BASE_URL = "http://10.13.1.39:3000";
@@ -98,22 +103,34 @@ export default function App() {
 
   // --- API CALLS ---
   const fetchLotInfo = async (code) => {
+    console.log("📡 Envoi de la requête à :", `${API_BASE_URL}/api/lotinfo`);
+    console.log("📩 Body envoyé :", JSON.stringify({ lotCode: code }));
+  
     try {
       const response = await fetch(`${API_BASE_URL}/api/lotinfo`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ lotCode: code }),
       });
+  
+      console.log("📥 Statut de la réponse :", response.status);
+  
       if (!response.ok) {
+        const errorText = await response.text();
+        console.log("⚠️ Erreur API :", errorText);
         throw new Error("Lot introuvable ou erreur");
       }
+  
       const data = await response.json();
+      console.log("✅ Réponse API reçue :", data);
       return data;
     } catch (err) {
+      console.error("🚨 Erreur lors de la requête :", err);
       Alert.alert("Erreur", err.message);
       return null;
     }
   };
+
 
   const updateNbapel = async (lot_complet) => {
     try {
@@ -132,25 +149,47 @@ export default function App() {
     }
   };
 
-  const uploadPhotoToGed = async (fileUri, finalName) => {
+  const uploadPhotoToGed = async (fileUri: string, finalName: string) => {
+    console.log("📡 Envoi de la requête à :", `${API_BASE_URL}/upload-to-ged`);
+    console.log("📩 Fichier envoyé :", finalName, "📁", fileUri);
+  
     const formData = new FormData();
     formData.append("file", {
       uri: fileUri,
       name: finalName,
       type: "image/png",
     });
+  
     try {
       const response = await fetch(`${API_BASE_URL}/upload-to-ged`, {
         method: "POST",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
         body: formData,
       });
+  
+      console.log("📥 Statut de la réponse :", response.status);
+  
       const result = await response.text();
-      console.log("Résultat de l'upload", result);
+      console.log("✅ Réponse API reçue :", result);
+  
+      if (!response.ok) {
+        Alert.alert(
+          "Erreur API GED",
+          `Statut : ${response.status}\nRéponse : ${result}`
+        );
+        throw new Error(`Erreur API GED : ${result}`);
+      }
+  
     } catch (err) {
-      Alert.alert("Erreur", "Problème lors de l'envoi vers la GED");
-      console.error("Upload error", err);
+      console.error("🚨 Erreur lors de l'upload :", err);
+      Alert.alert("Erreur", `Problème GED : ${err.message}`);
     }
   };
+  
+  
+  
 
   // --- Capture et Traitement de la Photo ---
   const takePicture = async () => {
@@ -261,6 +300,7 @@ export default function App() {
             placeholder="Code de lot"
             value={lotCode}
             onChangeText={setLotCode}
+            keyboardType="numeric"
           />
           {photoType === "avant_fonte" && (
             <TextInput
@@ -331,7 +371,7 @@ export default function App() {
     if (photoType === "avant_fonte") {
       return (
         <View style={styles.container}>
-          <Text style={{ marginBottom: 10 }}>Photo Finale Composée</Text>
+          <Text style={{ marginBottom: 10 }}>Photo Finale</Text>
           <ViewShot
             ref={viewShotRef}
             options={{ format: "png", quality: 1 }}
@@ -395,7 +435,7 @@ export default function App() {
           </ViewShot>
           {compositeUri ? (
             <Text style={{ marginVertical: 10 }}>
-              Image composée et envoyée
+              Image composée et envoyée ! 
             </Text>
           ) : (
             <ActivityIndicator size="large" />

@@ -3,7 +3,6 @@ const odbc = require('odbc');
 const multer = require('multer');
 const FormData = require('form-data');
 const axios = require('axios');
-const fetch = require('node-fetch'); // Si besoin de node-fetch pour effectuer les appels HTTP
 const app = express();
 
 app.use(express.json());

@@ -23,6 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "jsEngine": "jsc",
       "package": "com.example.SnapSAAMP"
     },
     "web": {
@@ -30,17 +31,18 @@
     },
     "extra": {
       "eas": {
+        "projectId": "4456abc5-ef90-4eeb-952f-cac4185db4ba"
       }
     },
     "plugins": [
-          [
-            "expo-build-properties",
-            {
-              "android": {
-                "kotlinVersion": "1.9.25"
-              }
-            }
-          ]
-        ]
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.9.25"
+          }
+        }
+      ]
+    ]
   }
 }
