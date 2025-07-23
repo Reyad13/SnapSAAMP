@@ -2,7 +2,7 @@
   "expo": {
     "name": "SnapSAAMP",
     "slug": "SnapSAAMP",
-    "version": "1.0.0",
+    "version": "1.6",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -24,7 +24,8 @@
         "backgroundColor": "#ffffff"
       },
       "jsEngine": "jsc",
-      "package": "com.example.SnapSAAMP"
+      "package": "com.example.SnapSAAMP",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"

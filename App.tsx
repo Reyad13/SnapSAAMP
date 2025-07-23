@@ -30,7 +30,7 @@ import React from 'react';
 
 
 // URL de votre backend (à adapter)
-const API_BASE_URL = "http://10.13.1.39:3000";
+const API_BASE_URL = "http://10.13.1.127:3000";
 
 export default function App() {
   // Gestion d'Expo Camera
@@ -40,6 +40,7 @@ export default function App() {
   const [mode, setMode] = useState("picture");
   const [facing, setFacing] = useState("back");
   const [recording, setRecording] = useState(false);
+  const [isPreview, setIsPreview] = useState(false);
 
   // États métier et interface
   const [showModeDialog, setShowModeDialog] = useState(true);
@@ -195,11 +196,21 @@ export default function App() {
   const takePicture = async () => {
     const photo = await ref.current?.takePictureAsync();
     setUri(photo?.uri);
+    setIsPreview(true);
+  };
+
+  const handleContinueWithPhoto = () => {
+    setIsPreview(false);
     if (photoType === "reception" && requireSignature) {
       setShowSignaturePad(true);
     } else {
-      processFinalPhoto(photo.uri, null);
+      processFinalPhoto(uri, null);
     }
+  };
+
+  const handleRetakePhoto = () => {
+    setUri(null);
+    setIsPreview(false);
   };
 
   // Pour le nom final, pour "avant_fonte" on ajoute _avantfonte.png,
@@ -466,13 +477,26 @@ export default function App() {
       {finalUri ? (
         renderFinalPicture()
       ) : uri ? (
-        <View style={styles.container}>
+        <View style={styles.previewContainer}>
           <Image
             source={{ uri }}
-            style={{ width: 300, aspectRatio: 1 }}
+            style={styles.previewImage}
             resizeMode="contain"
           />
-          <Button onPress={() => setUri(null)} title="Prendre une nouvelle photo" />
+          <View style={styles.previewButtonsContainer}>
+            <Pressable 
+              style={[styles.previewButton, styles.retakeButton]} 
+              onPress={handleRetakePhoto}
+            >
+              <Text style={styles.buttonText}>Reprendre la photo</Text>
+            </Pressable>
+            <Pressable 
+              style={[styles.previewButton, styles.continueButton]} 
+              onPress={handleContinueWithPhoto}
+            >
+              <Text style={styles.buttonText}>Continuer</Text>
+            </Pressable>
+          </View>
         </View>
       ) : (
         <CameraView
@@ -640,7 +664,47 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   photoImage: {
-    width: 300,
-    height: 300,
+    width: 500,
+    height: 500,
+  },
+  previewContainer: {
+    flex: 1,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  previewImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  previewButtonsContainer: {
+    position: 'absolute',
+    bottom: 44,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  previewButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    minWidth: 150,
+    alignItems: 'center',
+  },
+  retakeButton: {
+    backgroundColor: '#ff4444',
+  },
+  continueButton: {
+    backgroundColor: '#44bb44',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
